@@ -26,7 +26,7 @@ class Admin_In():
         message = self.driver.find_element(By.XPATH, "//div[@class='admin_text']").text
         assert "Items" in message
 
-    def menu(self, option, operation, items, items_2):
+    def menu(self, option, operation, items, items_2, images_path):
 
         if(option=="items"):
             self.driver.find_element(By.ID, "1").click()
@@ -44,5 +44,26 @@ class Admin_In():
                       if option.text==l:
                           option.click()
                           time.sleep(0.5)
-    def submit(self):
-        self.driver.find_element(By.ID, "submit_items").click()
+
+                time.sleep(1)
+                self.driver.find_element(By.ID, "upload_button").send_keys(images_path)
+                time.sleep(2)
+
+                self.driver.find_element(By.ID, "submit_items").click()
+
+        if (option == "author"):
+
+            self.driver.find_element(By.ID, "2").click()
+            time.sleep(1.5)
+            if ('post' == operation):
+
+                author_form = self.driver.find_elements(By.CLASS_NAME, "book_form")
+
+                for i,j in zip(author_form, items):
+                   i.send_keys(j)
+                   time.sleep(0.5)
+
+                self.driver.find_element(By.ID, "save_author").click()
+
+
+

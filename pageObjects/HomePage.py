@@ -4,6 +4,7 @@ from selenium.webdriver.common.by import By
 
 from pageObjects.Log_in import Log_in
 from pageObjects.Admin import Admin_In
+from pageObjects.Search_page import Search_page
 from selenium.webdriver.support.select import Select
 
 from utilities.BaseClass import BaseClass
@@ -19,8 +20,14 @@ class HomePage(BaseClass):
 
         self.driver.find_element(by, locator_text).click()
 
+    home = (By.ID, "home_button")
     sign = (By.ID, "sign_in_text")
     admin = (By.CLASS_NAME, "site-title")
+    search_textbox = (By.CLASS_NAME, "Bar")
+    search_button = (By.CLASS_NAME, "search_submit")
+
+    def home_page(self):
+        self.driver.find_element(*HomePage.home).click()  # we use asterix because we are dealing with a tuple
 
     def sign_in(self):
 
@@ -29,8 +36,8 @@ class HomePage(BaseClass):
         return log_in
 
     def admin_in(self):
-        self.driver.find_element(*HomePage.admin).click()  # we use asterix because we are dealing with a tuple
-        admin_in = Admin_In(self.driver)  # we create an instance of CheckOutPage
+        self.driver.find_element(*HomePage.admin).click()
+        admin_in = Admin_In(self.driver)
         return admin_in
 
     def alert(self, order):
@@ -38,7 +45,15 @@ class HomePage(BaseClass):
         time.sleep(1)
         if(order=="dismiss"):
             alert.dismiss()
-    def verifying_page_message(self):
+    def verifying_page_message(self, path, message_text):
 
-        message = self.driver.find_element(By.XPATH, "//div[@class='home_text']").text
-        assert "THIS IS THE HOME PAGE" in message
+        message = self.driver.find_element(By.XPATH, path).text
+        assert message_text in message
+
+    def search(self, item):
+        self.driver.find_element(*HomePage.search_textbox).send_keys(item) # we use asterix because we are dealing with a tuple
+        time.sleep(1)
+        self.driver.find_element(*HomePage.search_button).click()
+        search_instance = Search_page(self.driver)  # we create an instance of CheckOutPage
+        return search_instance
+
